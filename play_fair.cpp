@@ -164,17 +164,17 @@ public :
 
         // Two pointers to avoid whitespace
         int l = 0, r = 1;
-        // Start with non whitespace char
+        // Start with alnum char
         while (l < str.length() && !isalnum(str[l]) ) {
-            l++;
             crypt.push_back(str[l]);
+            l++;
         }
 
         pair<char, char> crypt_pair;
 
         // Begin normal Cipher 
         while (l < str.length() ) {
-            // Append l whitespace and move forward
+            // Append l non alnum and move forward
             while (l < str.length() && !isalnum(str[l]) ) {
                 crypt.push_back(str[l]);
                 l++;
@@ -184,7 +184,7 @@ public :
             // Safe Guard
             if (l == str.length() ) break;
 
-            // Ignore r pos whitespace and move forward
+            // Ignore r pos non alnum and move forward
             while (r < str.length() && !isalnum(str[r]) ) {
                 r++;
             }
@@ -193,13 +193,9 @@ public :
             // Use filler char with l pos char
             if (r == str.length() || str[r] == str[l]) {
                 crypt_pair = _get_encrypted(tolower(str[l]), _filler );
-                // Update next pair start
-                l = r;
             }
             else {
                 crypt_pair = _get_encrypted(tolower(str[l]), tolower(str[r]) );
-                // Update next pair start
-                l = r+1;
             }
 
             // Append Encrypted chars
@@ -210,6 +206,8 @@ public :
             }
             crypt.push_back(crypt_pair.second);
 
+            // update next pair start
+            l = (str[r] == str[l])? r : r+1 ;
             // update next pair second pos
             r = l+1;
         } 
@@ -222,17 +220,17 @@ public :
 
         // Two pointers to avoid whitespace
         int l = 0, r = 1;
-        // Start with non whitespace char
+        // Start with alnum char
         while (l < crypt_str.length() && !isalnum(crypt_str[l]) ) {
-            l++;
             txt.push_back(crypt_str[l]);
+            l++;
         }
 
         pair<char, char> decrypt_pair;
 
         // Begin normal Cipher 
         while (l < crypt_str.length() ) {
-            // Append l whitespace and move forward
+            // Append l non alnum and move forward
             while (l < crypt_str.length() && !isalnum(crypt_str[l]) ) {
                 txt.push_back(crypt_str[l]);
                 l++;
@@ -242,23 +240,23 @@ public :
             // Safe Guard
             if (l == crypt_str.length() ) break;
 
-            // Ignore r pos whitespace and move forward
+            // Ignore r pos non alnum and move forward
             while (r < crypt_str.size() && !isalnum(crypt_str[r]) ) {
                 r++;
             }
             
             decrypt_pair = _get_decrypted(crypt_str[l], crypt_str[r] );
-            // Update next pair start
-            l = r+1;
-
+            
             // Append Encrypted chars
             txt.push_back(decrypt_pair.first);
-            // Add the in between whitespace
+            // Add the in between non alnum
             for (int i = l+1; i < r; i++) {
                 txt.push_back(crypt_str[i]);
             }
             txt.push_back(decrypt_pair.second);
 
+            // Update next pair start
+            l = r+1;
             // update next pair second pos
             r = l+1;
         }
@@ -269,7 +267,7 @@ public :
 };
 
 int main () {
-    string og_text = "hello World! I am 20 yrs old...";
+    string og_text = "  !@#  hello World! I am 20 yrs old...";
     string key = "HelpMe";
 
     cout<<"OG text : "<< og_text <<endl;
